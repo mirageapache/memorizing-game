@@ -1,13 +1,16 @@
 #cards{
   display: flex;
+  flex-wrap: wrap;
 }
 .card{
   flex:7% 0 1; /* 每個 item 分配容器寬度 */
-  height: 8vm; /* 依視窗的寬度等比例變化 */
+  height: 8vw; /* 依視窗的寬度等比例變化 */
   border: 2px solid #e0e0e0;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  margin: 2px;
+  box-sizing: border-box;
 }
 .card img{
   max-width: 30%;

@@ -1,6 +1,6 @@
 // 會使用MVC架構將程式碼模組化
 
-// Declarative =======================
+// Declarative(宣告) =======================
 // 卡牌圖示
 const symbols = [
   'https://assets-lighthouse.alphacamp.co/uploads/image/file/17989/__.png', // 黑桃
@@ -9,7 +9,7 @@ const symbols = [
   'https://assets-lighthouse.alphacamp.co/uploads/image/file/17988/__.png' // 梅花
 ]
 
-// View =======================
+// View(介面) =======================
 const view = {
   // 取得卡牌元素
   getCardElement(index){
@@ -28,7 +28,8 @@ const view = {
   // 產生卡牌
   displayCard(){
     const rootElement = document.querySelector('#cards')
-    rootElement.innerHTML = this.getCardElement(11)
+    // rootElement.innerHTML = this.getCardElement(11)
+    rootElement.innerHTML = utility.getRandomNubmerArray(52).map(index => this.getCardElement(index)).join("")
   },
 
   //特殊數字轉換 [1,11,12,13的卡牌要換成A,J,Q,K]
@@ -47,6 +48,20 @@ const view = {
     }
   }
 
+
+}
+
+// Utility(外掛函式) =======================
+const utility = {
+  // 隨機重組數字(洗牌演算法：Fisher-Yates Shuffle)
+  getRandomNubmerArray(count){
+    const number = Array.from(Array(count).keys())
+    for(let index = number.length-1; index > 0; index--){
+      let random_index = Math.floor(Math.random() * (index + 1))
+      ;[number[index], number[random_index]] = [number[random_index], number[index]]
+    }
+    return number
+  }
 
 }
 
