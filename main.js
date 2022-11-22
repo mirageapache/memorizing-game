@@ -11,25 +11,43 @@ const symbols = [
 
 // View(介面) =======================
 const view = {
-  // 取得卡牌元素
+  // 取得卡牌，預設為蓋牌狀態
   getCardElement(index){
+    return `
+    <div class="card back" data-index="${index}"></div>
+    `
+  },
+
+  //取得卡牌內元素
+  getCardContent(index){
     const number = this.transformNumber((index%13)+1) //卡牌數字
     const symbol = symbols[Math.floor(index / 13)] //卡牌圖示
 
     return `
-    <div class="card">
       <p>${number}</p>
       <img src="${symbol}">
       <p>${number}</p>
-    </div>
     `
   },
 
   // 產生卡牌
   displayCard(){
     const rootElement = document.querySelector('#cards')
-    // rootElement.innerHTML = this.getCardElement(11)
     rootElement.innerHTML = utility.getRandomNubmerArray(52).map(index => this.getCardElement(index)).join("")
+  },
+
+  // 翻轉卡牌
+  flipCard(card){
+    // 如果是背面(back)就轉正面(取得卡片數字及花色)
+    if(card.classList.contains('back')){
+      card.classList.remove('back')
+      card.innerHTML = this.getCardContent(card.dataset.index) 
+      return
+    }
+
+    // 如果是正面就蓋牌
+    card.classList.add('back')
+    card.innerHTML = null
   },
 
   //特殊數字轉換 [1,11,12,13的卡牌要換成A,J,Q,K]
@@ -66,5 +84,15 @@ const utility = {
 }
 
 
+// Execute(執行) =======================
 
+//產製及顯示卡牌
 view.displayCard()
+
+//監聽卡牌點擊
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('click', event => {
+    view.flipCard(card)
+  })
+})
+
