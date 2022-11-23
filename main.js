@@ -46,17 +46,19 @@ const view = {
   },
 
   // 翻轉卡牌
-  flipCard(card){
-    // 如果是背面(back)就轉正面(取得卡片數字及花色)
-    if(card.classList.contains('back')){
-      card.classList.remove('back')
-      card.innerHTML = this.getCardContent(card.dataset.index) 
-      return
-    }
+  flipCards(...cards){ //用展開運算子「...」將傳入的參數變成陣列
+    cards.map(card => { //再用.map()來執行翻牌動作
+      // 如果是背面(back)就轉正面(取得卡片數字及花色)
+      if(card.classList.contains('back')){
+        card.classList.remove('back')
+        card.innerHTML = this.getCardContent(card.dataset.index) 
+        return
+      }
 
-    // 如果是正面就蓋牌
-    card.classList.add('back')
-    card.innerHTML = null
+      // 如果是正面就蓋牌
+      card.classList.add('back')
+      card.innerHTML = null
+    })
   },
 
   // 特殊數字轉換 [1,11,12,13的卡牌要換成A,J,Q,K]
@@ -76,8 +78,10 @@ const view = {
   },
 
   // 反灰卡牌 (改變配對成功牌組的樣式)
-  pairCard(card){
-    card.classList.add('paired')
+  pairCards(...cards){
+    cards.map(card => {
+      card.classList.add('paired')
+    })
   }
 
 }
@@ -99,40 +103,39 @@ const controller = {
 
     switch (this.currentState){
       case GAME_STATE.FirstCardAwaits:
-        view.flipCard(card) //翻牌
+        view.flipCards(card) //翻牌
         model.revealedCards.push(card) //暫存到陣列
         this.currentState = GAME_STATE.SecondCardAwaits //更新遊戲狀態(推進到SecondCardAwaits)
         break
       case GAME_STATE.SecondCardAwaits:
-        view.flipCard(card) 
+        view.flipCards(card) 
         model.revealedCards.push(card)
 
         if(model.isReaveledCardsMatched()){
           // 配對成功
           this.currentState = GAME_STATE.CardsMatched //更新遊戲狀態(推進到CardsMatched)
-          view.pairCard(model.revealedCards[0]) //將牌組反灰
-          view.pairCard(model.revealedCards[1])
+          view.pairCards(...model.revealedCards) //將牌組反灰
           model.revealedCards = [] //清除暫存陣列
           this.currentState = GAME_STATE.FirstCardAwaits //更新遊戲狀態(回到FirstCardAwaits)
         }
         else{
           // 配對失敗
           this.currentState = GAME_STATE.CardsMatchFailed //更新遊戲狀態(推進到CardsMatchFailed)
-          setTimeout(() => {
-          view.flipCard(model.revealedCards[0]) //覆蓋卡牌
-          view.flipCard(model.revealedCards[1])
-          model.revealedCards = [] //清除暫存陣列
-          this.currentState = GAME_STATE.FirstCardAwaits //更新遊戲狀態(回到FirstCardAwaits)
-          }, 1000);
-
+          setTimeout(this.resetCard, 1000);
         }
-
-
         break
     }
 
-    console.log('current state', this.currentState)
-    console.log('revealed Card', model.revealedCards)
+    // console.log('current state', this.currentState)
+    // console.log('revealed Card', model.revealedCards)
+  },
+
+  // 蓋牌動作
+  resetCard(){
+    console.log('reset')
+    view.flipCards(...model.revealedCards) //覆蓋卡牌
+    model.revealedCards = [] //清除暫存陣列
+    controller.currentState = GAME_STATE.FirstCardAwaits //更新遊戲狀態(回到FirstCardAwaits)
   }
 }
 
