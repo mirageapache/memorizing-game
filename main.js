@@ -9,6 +9,15 @@ const symbols = [
   'https://assets-lighthouse.alphacamp.co/uploads/image/file/17988/__.png' // 梅花
 ]
 
+// 遊戲狀態
+const GAME_STATE = {
+  FirstCardAwaits: "FirstCardAwaits", //等待翻第一張牌
+  SecondCardAwaits: "SecondCardAwaits", //等待翻第二張牌
+  CardsMatchFailed: "CardsMatchFailed", //卡牌配對失敗
+  CardsMatched: "CardsMatched", //卡牌配對成功
+  GameFinished: "GameFinished", //遊戲結束
+}
+
 // View(介面) =======================
 const view = {
   // 取得卡牌，預設為蓋牌狀態
@@ -30,10 +39,10 @@ const view = {
     `
   },
 
-  // 產生卡牌
-  displayCard(){
+  // 顯示初始產生的卡牌
+  displayCard(indexes){
     const rootElement = document.querySelector('#cards')
-    rootElement.innerHTML = utility.getRandomNubmerArray(52).map(index => this.getCardElement(index)).join("")
+    rootElement.innerHTML = indexes.map(index => this.getCardElement(index)).join("")
   },
 
   // 翻轉卡牌
@@ -69,6 +78,44 @@ const view = {
 
 }
 
+// Controller(控制器) =======================
+const controller = {
+  currentState: GAME_STATE.FirstCardAwaits,
+  
+  // 初始化產生卡牌
+  generateCards(){
+    view.displayCard(utility.getRandomNubmerArray(52))
+  },
+
+  // 管理及觸發遊戲狀態(進度) 
+  dispatchCardAction(card){
+    if(!card.classList.contains('back')){
+      return
+    }
+
+    switch (this.currentState){
+      case GAME_STATE.FirstCardAwaits:
+        view.flipCard(card) //翻牌
+        model.revealedCards.push(card) //暫存到array
+        this.currentState = GAME_STATE.SecondCardAwaits //更新遊戲狀態(推進到SecondCardAwaits)
+        break
+      case GAME_STATE.SecondCardAwaits:
+        view.flipCard(card) 
+
+        break
+    }
+
+    console.log('current state', this.currentState)
+    console.log('revealed Card', model.revealedCards)
+  }
+}
+
+// Model(資料) =======================
+const model = {
+  revealedCards: [] //記錄被翻開的卡牌
+}
+
+
 // Utility(外掛函式) =======================
 const utility = {
   // 隨機重組數字(洗牌演算法：Fisher-Yates Shuffle)
@@ -86,13 +133,13 @@ const utility = {
 
 // Execute(執行) =======================
 
-//產製及顯示卡牌
-view.displayCard()
+//初始化產生卡牌
+controller.generateCards()
 
 //監聽卡牌點擊
 document.querySelectorAll('.card').forEach(card => {
   card.addEventListener('click', event => {
-    view.flipCard(card)
+    controller.dispatchCardAction(card)
   })
 })
 
