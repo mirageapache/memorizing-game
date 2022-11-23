@@ -59,7 +59,7 @@ const view = {
     card.innerHTML = null
   },
 
-  //特殊數字轉換 [1,11,12,13的卡牌要換成A,J,Q,K]
+  // 特殊數字轉換 [1,11,12,13的卡牌要換成A,J,Q,K]
   transformNumber(number){
     switch(number){
       case 1:
@@ -73,8 +73,12 @@ const view = {
       default:
         return number
     }
-  }
+  },
 
+  // 反灰卡牌 (改變配對成功牌組的樣式)
+  pairCard(card){
+    card.classList.add('paired')
+  }
 
 }
 
@@ -96,11 +100,33 @@ const controller = {
     switch (this.currentState){
       case GAME_STATE.FirstCardAwaits:
         view.flipCard(card) //翻牌
-        model.revealedCards.push(card) //暫存到array
+        model.revealedCards.push(card) //暫存到陣列
         this.currentState = GAME_STATE.SecondCardAwaits //更新遊戲狀態(推進到SecondCardAwaits)
         break
       case GAME_STATE.SecondCardAwaits:
         view.flipCard(card) 
+        model.revealedCards.push(card)
+
+        if(model.isReaveledCardsMatched()){
+          // 配對成功
+          this.currentState = GAME_STATE.CardsMatched //更新遊戲狀態(推進到CardsMatched)
+          view.pairCard(model.revealedCards[0]) //將牌組反灰
+          view.pairCard(model.revealedCards[1])
+          model.revealedCards = [] //清除暫存陣列
+          this.currentState = GAME_STATE.FirstCardAwaits //更新遊戲狀態(回到FirstCardAwaits)
+        }
+        else{
+          // 配對失敗
+          this.currentState = GAME_STATE.CardsMatchFailed //更新遊戲狀態(推進到CardsMatchFailed)
+          setTimeout(() => {
+          view.flipCard(model.revealedCards[0]) //覆蓋卡牌
+          view.flipCard(model.revealedCards[1])
+          model.revealedCards = [] //清除暫存陣列
+          this.currentState = GAME_STATE.FirstCardAwaits //更新遊戲狀態(回到FirstCardAwaits)
+          }, 1000);
+
+        }
+
 
         break
     }
@@ -112,7 +138,12 @@ const controller = {
 
 // Model(資料) =======================
 const model = {
-  revealedCards: [] //記錄被翻開的卡牌
+  revealedCards: [],  //記錄被翻開的卡牌
+  
+  // 合對卡牌 (判斷翻開的兩張卡牌是否一樣)
+  isReaveledCardsMatched(){
+     return this.revealedCards[0].dataset.index % 13 === this.revealedCards[1].dataset.index % 13
+  }
 }
 
 
