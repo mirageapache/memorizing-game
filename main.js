@@ -82,7 +82,19 @@ const view = {
     cards.map(card => {
       card.classList.add('paired')
     })
+  },
+
+  //顯示分數 
+  renderScore(score){
+    console.log(score)
+    document.querySelector('.score').textContent = `score：${score}`
+  },  
+  
+  // 顯示次數
+  renderTriedTimes(times){
+    document.querySelector('.tried').textContent = `You've tried：${times} times`
   }
+
 
 }
 
@@ -110,9 +122,11 @@ const controller = {
       case GAME_STATE.SecondCardAwaits:
         view.flipCards(card) 
         model.revealedCards.push(card)
+        view.renderTriedTimes(++model.triedTimes)
 
         if(model.isReaveledCardsMatched()){
           // 配對成功
+          view.renderScore(model.score += 10)
           this.currentState = GAME_STATE.CardsMatched //更新遊戲狀態(推進到CardsMatched)
           view.pairCards(...model.revealedCards) //將牌組反灰
           model.revealedCards = [] //清除暫存陣列
@@ -132,7 +146,6 @@ const controller = {
 
   // 蓋牌動作
   resetCard(){
-    console.log('reset')
     view.flipCards(...model.revealedCards) //覆蓋卡牌
     model.revealedCards = [] //清除暫存陣列
     controller.currentState = GAME_STATE.FirstCardAwaits //更新遊戲狀態(回到FirstCardAwaits)
@@ -146,7 +159,10 @@ const model = {
   // 合對卡牌 (判斷翻開的兩張卡牌是否一樣)
   isReaveledCardsMatched(){
      return this.revealedCards[0].dataset.index % 13 === this.revealedCards[1].dataset.index % 13
-  }
+  },
+
+  score: 0, //記錄分數
+  triedTimes: 0 //記錄次數
 }
 
 
