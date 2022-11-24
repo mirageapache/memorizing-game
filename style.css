@@ -1,9 +1,10 @@
 #cards{
   display: flex;
   flex-wrap: wrap;
+  margin: 0 auto;
 }
 .card{
-  flex:7% 0 1; /* 每個 item 分配容器寬度 */
+  flex:7% 1 1; /* 每個 item 分配容器寬度 */
   height: 8vw; /* 依視窗的寬度等比例變化 */
   border: 2px solid #e0e0e0;
   display: flex;
@@ -31,4 +32,30 @@
 
 .paired {
   background-color: #dae0e3;
+}
+
+#header{
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 100%;
+  align-items: flex-end;
+}
+#header .title{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+#header .title img{
+  max-width: 4em;
+}
+#header .title h2{
+  padding-left: 0.5em;
+}
+#header .score{
+  margin: 0;
+  color: #6c90ac;
+}
+#header .tried{
+  margin-top: 0;
 }
