@@ -1,3 +1,31 @@
+/* 導覽列 */
+#header{
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 100%;
+  align-items: flex-end;
+}
+#header .title{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+#header .title img{
+  max-width: 4em;
+}
+#header .title h2{
+  padding-left: 0.5em;
+}
+#header .score{
+  margin: 0;
+  color: #6c90ac;
+}
+#header .tried{
+  margin-top: 0;
+}
+
+/* 卡牌基本樣式 */
 #cards{
   display: flex;
   flex-wrap: wrap;
@@ -25,42 +53,18 @@
   transform: rotate(180deg);
 }
 
+/* 卡牌背面圖 */
 .back{
   background: url('https://assets-lighthouse.alphacamp.co/uploads/image/file/9222/ExportedContentImage_00.png');
   background-size: cover;
 }
 
+/* 配對成功 */
 .paired {
   background-color: #dae0e3;
 }
 
-#header{
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  width: 100%;
-  align-items: flex-end;
-}
-#header .title{
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-}
-#header .title img{
-  max-width: 4em;
-}
-#header .title h2{
-  padding-left: 0.5em;
-}
-#header .score{
-  margin: 0;
-  color: #6c90ac;
-}
-#header .tried{
-  margin-top: 0;
-}
-
-/* 設定動畫 */
+/* 配對錯誤動畫 */
 .wrong {
   animation: wrongAnimation; /* 呼叫 wrongAnimation 動畫影格*/
   animation-duration: 0.2s; /* 持續時間 */
