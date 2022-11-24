@@ -93,8 +93,17 @@ const view = {
   // 顯示次數
   renderTriedTimes(times){
     document.querySelector('.tried').textContent = `You've tried：${times} times`
-  }
+  },
 
+  // 配對錯誤顯示動畫
+  appendWrongAnimation(...cards){
+    cards.map(card => {
+      card.classList.add('wrong')
+      card.addEventListener('animationend', event =>
+        event.target.classList.remove('wrong'),{once: true}
+      )
+    })
+  }
 
 }
 
@@ -135,6 +144,7 @@ const controller = {
         else{
           // 配對失敗
           this.currentState = GAME_STATE.CardsMatchFailed //更新遊戲狀態(推進到CardsMatchFailed)
+          view.appendWrongAnimation(...model.revealedCards)
           setTimeout(this.resetCard, 1000);
         }
         break

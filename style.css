@@ -59,3 +59,15 @@
 #header .tried{
   margin-top: 0;
 }
+
+/* 設定動畫 */
+.wrong {
+  animation: wrongAnimation; /* 呼叫 wrongAnimation 動畫影格*/
+  animation-duration: 0.2s; /* 持續時間 */
+  animation-iteration-count: 5; /* 動畫執行次數 */
+}
+@keyframes wrongAnimation {
+  to{
+    border: 2px solid red;
+  }
+}
