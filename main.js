@@ -103,6 +103,20 @@ const view = {
         event.target.classList.remove('wrong'),{once: true}
       )
     })
+  },
+
+  // 顯示遊戲結束
+  showGameFinished(){
+    const div = document.createElement('div')
+    div.classList.add('completed')
+    div.innerHTML =`
+      <p>Complete！</p>
+      <p>Score： ${model.score}</p>
+      <p>You've tried： ${model.triedTimes} times</p>
+      <button id="restart" class="btn btn-success" onclick="controller.restartGame()">Restart</button>
+    `
+    const header = document.querySelector('#header')
+    header.before(div)
   }
 
 }
@@ -139,6 +153,12 @@ const controller = {
           this.currentState = GAME_STATE.CardsMatched //更新遊戲狀態(推進到CardsMatched)
           view.pairCards(...model.revealedCards) //將牌組反灰
           model.revealedCards = [] //清除暫存陣列
+          // 當分數達260分則遊戲結束
+          if(model.score === 260){
+            this.currentState == GAME_STATE.GameFinished
+            view.showGameFinished()
+            return
+          }
           this.currentState = GAME_STATE.FirstCardAwaits //更新遊戲狀態(回到FirstCardAwaits)
         }
         else{
@@ -159,6 +179,11 @@ const controller = {
     view.flipCards(...model.revealedCards) //覆蓋卡牌
     model.revealedCards = [] //清除暫存陣列
     controller.currentState = GAME_STATE.FirstCardAwaits //更新遊戲狀態(回到FirstCardAwaits)
+  },
+
+  // 重新開始遊戲
+  restartGame(){
+    location.reload()
   }
 }
 
@@ -202,4 +227,3 @@ document.querySelectorAll('.card').forEach(card => {
     controller.dispatchCardAction(card)
   })
 })
-

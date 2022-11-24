@@ -71,3 +71,38 @@
     border: 2px solid red;
   }
 }
+
+/* 遊戲結束 */
+.completed{
+  position: absolute;
+  z-index: 999;
+  top: 33vh;
+  background-color: rgba(232, 246, 254, 0.8);
+  width: 100vw;
+  padding: 50px 0;
+}
+.completed p{
+  font-size: 1.5em;
+  color: black;
+  text-align: center;
+  margin: 0;
+}
+.completed p:first-child{
+  font-size: 3em;
+  font-weight: 700;
+  color: #0a5e8c;
+  /* color: #758d9a; */
+}
+.completed .btn{
+  padding: 5px 15px;
+  border-radius: 5px;
+  font-size: 2em;
+  display: block;
+  margin: 20px auto;
+  background-color: #5fed5a;
+  cursor: pointer;
+}
+.completed .btn:hover{
+  background-color: #4dc449;
+}
+
